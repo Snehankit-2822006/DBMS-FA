@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EventBook | Premium Ticketing</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo">EventBook</a>
+        <div class="nav-links">
+            <a href="index.html" style="color: white; margin-right: 15px; text-decoration: none;">Home</a>
+            <a href="my-bookings.html" style="color: white; margin-right: 15px; text-decoration: none;">My Bookings</a>
+            <a href="admin.html" style="color: #f87171; text-decoration: none;">Admin</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="header">
+            <h1>Upcoming Events</h1>
+            <p>Discover and book tickets for the best events happening around you.</p>
+        </div>
+        <div id="loader">Loading events...</div>
+        <div class="events-grid" id="events-grid">
+            <!-- Events will be rendered here dynamically -->
+        </div>
+    </div>
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchEvents();
+        });
+    </script>
+</body>
+</html>

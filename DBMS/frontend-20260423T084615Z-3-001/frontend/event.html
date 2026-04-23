@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Details | EventBook</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo">EventBook</a>
+        <div class="nav-links">
+            <a href="index.html" style="color: white; margin-right: 15px; text-decoration: none;">Home</a>
+            <a href="my-bookings.html" style="color: white; margin-right: 15px; text-decoration: none;">My Bookings</a>
+            <a href="admin.html" style="color: #f87171; text-decoration: none;">Admin</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div id="loader">Loading event details...</div>
+        <div id="event-details-container" style="display: none;">
+            <div class="event-hero" id="event-hero">
+                <!-- Event Data -->
+            </div>
+            
+            <div class="seats-container">
+                <h2>Select Your Seat</h2>
+                <p style="margin-bottom: 2rem; color: var(--text-muted);">Click on an available seat to book.</p>
+                <div class="screen">STAGE</div>
+                <div class="seat-grid" id="seat-grid">
+                    <!-- Seats -->
+                </div>
+            </div>
+
+            <div class="booking-form" id="booking-form">
+                <h2>Complete Booking</h2>
+                <p style="margin-bottom: 1.5rem;">You selected seat <span id="selected-seat-label" style="font-weight: bold; color: var(--accent);"></span></p>
+                <form id="bookForm" onsubmit="submitBooking(event)">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" required placeholder="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" required placeholder="john@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="payment_method">Payment Method</label>
+                        <select id="payment_method" required style="width: 100%; padding: 0.75rem; border-radius: 8px; background: var(--bg-dark); color: white; border: 1px solid rgba(255,255,255,0.1);">
+                            <option value="UPI">UPI</option>
+                            <option value="Credit Card">Credit Card</option>
+                            <option value="Debit Card">Debit Card</option>
+                            <option value="Net Banking">Net Banking</option>
+                        </select>
+                    </div>
+                    <p style="margin-top: 1rem; font-size: 1.1rem;">Total Amount: <span style="color: var(--accent); font-weight: bold;">₹500.00</span></p>
+                    <input type="hidden" id="amount" value="500">
+
+                    <button type="submit" class="btn" id="submitBtn">Confirm Booking</button>
+                    <p id="form-msg" style="margin-top: 1rem;"></p>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const eventId = params.get('id');
+            if(eventId) {
+                fetchEventDetails(eventId);
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+</html>

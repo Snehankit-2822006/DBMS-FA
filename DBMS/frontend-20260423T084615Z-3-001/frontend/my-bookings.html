@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookings | EventBook</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo">EventBook</a>
+        <div class="nav-links">
+            <a href="index.html" style="color: white; margin-right: 15px; text-decoration: none;">Home</a>
+            <a href="my-bookings.html" style="color: var(--accent); margin-right: 15px; text-decoration: none; font-weight: bold;">My Bookings</a>
+            <a href="admin.html" style="color: #f87171; text-decoration: none;">Admin</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="header" style="text-align: center; margin-bottom: 2rem;">
+            <h1>Retrieve Your Tickets</h1>
+            <p>Enter your email address to find all your event bookings.</p>
+        </div>
+        
+        <div style="max-width: 500px; margin: 0 auto 3rem auto; background: var(--bg-card); padding: 2rem; border-radius: 12px;">
+            <form id="searchBookingsForm" onsubmit="searchMyBookings(event)">
+                <div class="form-group">
+                    <label for="searchEmail">Email Address</label>
+                    <input type="email" id="searchEmail" required placeholder="john@example.com">
+                </div>
+                <button type="submit" class="btn" id="searchBtn">Find My Bookings</button>
+            </form>
+        </div>
+
+        <div id="my-bookings-container" style="display: none;">
+            <h2 style="margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">Your Tickets</h2>
+            <div id="tickets-grid" class="events-grid">
+                <!-- Tickets will render here -->
+            </div>
+        </div>
+    </div>
+    <script>
+        async function searchMyBookings(e) {
+            e.preventDefault();
+            const email = document.getElementById('searchEmail').value;
+            const btn = document.getElementById('searchBtn');
+            const container = document.getElementById('my-bookings-container');
+            const grid = document.getElementById('tickets-grid');
+            
+            btn.innerText = 'Searching...';
+            
+            try {
+                const response = await fetch(`http://localhost:3000/api/bookings/user/${encodeURIComponent(email)}`);
+                const tickets = await response.json();
+                
+                container.style.display = 'block';
+                grid.innerHTML = '';
+                
+                if(tickets.length === 0) {
+                    grid.innerHTML = '<p>No bookings found for this email.</p>';
+                } else {
+                    tickets.forEach(ticket => {
+                        const date = new Date(ticket.event_date).toLocaleDateString();
+                        const bookDate = new Date(ticket.booking_time).toLocaleDateString();
+                        
+                        grid.innerHTML += `
+                        <div class="event-card" style="padding: 1.5rem; border-left: 4px solid var(--accent);">
+                            <h3 style="color: var(--accent); margin-bottom: 0.5rem;">${ticket.event_title}</h3>
+                            <p style="color: var(--text-muted); font-size: 0.9em; margin-bottom: 1rem;">Booked on: ${bookDate}</p>
+                            <p><strong>Date:</strong> ${date}</p>
+                            <p><strong>Location:</strong> ${ticket.location}</p>
+                            <p><strong>Payment:</strong> <span style="color: var(--success)">₹${ticket.amount} (${ticket.payment_method})</span></p>
+                            <p><strong>Status:</strong> <span style="background: var(--success); padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; color: white;">${ticket.payment_status}</span></p>
+                            <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 8px; text-align: center;">
+                                <span style="font-size: 0.9em; color: var(--text-muted); text-transform: uppercase;">Seat Number</span>
+                                <div style="font-size: 2rem; font-weight: bold; color: #fff;">${ticket.seat_number}</div>
+                            </div>
+                        </div>
+
+                        `;
+                    });
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Failed to fetch tickets.");
+            } finally {
+                btn.innerText = 'Find My Bookings';
+            }
+        }
+    </script>
+</body>
+</html>
